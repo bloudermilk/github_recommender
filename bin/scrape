@@ -1,0 +1,11 @@
+#!/usr/bin/env ruby
+
+require "bundler"
+Bundler.require
+
+require File.expand_path("../../lib/github_discover", __FILE__)
+
+start_at = Time.new(*ARGV[0].split("-"))
+end_at = ARGV[1] ? Time.new(*ARGV[1].split("-")) : start_at
+
+GithubDiscover::Scraper.scrape!(start_at, end_at)
