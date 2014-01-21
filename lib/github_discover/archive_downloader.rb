@@ -1,6 +1,6 @@
 module GithubDiscover
   class ArchiveDownloader
-    include Celluloid::IO
+    include Celluloid#::IO
     include Celluloid::Logger
 
     URL_FORMAT = "http://data.githubarchive.org/%s.json.gz"
@@ -8,12 +8,12 @@ module GithubDiscover
 
     def get(time, io_out)
       url = URL_FORMAT % time.strftime(TIME_FORMAT)
-      body = HTTP.get(url, socket_class: Celluloid::IO::TCPSocket).body
+      body = HTTP.get(url).body # , socket_class: Celluloid::IO::TCPSocket
 
-      while part = body.readpartial
-        io_out.print(part)
+      while chunk = body.readpartial
+        io_out.print(chunk)
       end
-    ensure
+
       io_out.close
     end
   end

@@ -1,91 +1,18 @@
 module GithubDiscover
   class JsonStreamParser
     include Celluloid
+    include Celluloid::Logger
 
     def parse(io_in, block)
-      builder = Builder.new(&block)
-
-      loop { builder << io_in.readpartial(1024) }
+      while chunk = io_in.readline
+        begin
+          block.call(JSON.parse(chunk))
+        rescue JSON::ParserError
+          builder = MultiJsonParser.new(chunk, &block)
+        end
+      end
     rescue EOFError; ensure
       io_in.close
-    end
-
-    class Builder
-      METHODS = %w[
-        start_document end_document start_object end_object start_array end_array
-        key value
-      ]
-
-      def initialize
-        @parser = JSON::Stream::Parser.new
-
-        METHODS.each do |name|
-          @parser.send(name, &method(name))
-        end
-      end
-
-      def start_document
-        @stack, @result = [], nil
-      end
-
-      def end_document
-        @result = @stack.pop.obj
-      end
-
-      def start_object
-        @stack.push(ObjectNode.new)
-      end
-
-      def end_object
-        unless @stack.size == 1
-          node = @stack.pop
-          @stack[-1] << node.obj
-        end
-      end
-      alias :end_array :end_object
-
-      def start_array
-        @stack.push(ArrayNode.new)
-      end
-
-      def key(key)
-        @stack[-1] << key
-      end
-
-      def value(value)
-        @stack[-1] << value
-      end
-    end
-
-    class ArrayNode
-      attr_reader :obj
-
-      def initialize
-        @obj = []
-      end
-
-      def <<(node)
-        @obj << node
-        self
-      end
-    end
-
-    class ObjectNode
-      attr_reader :obj
-
-      def initialize
-        @obj, @key = {}, nil
-      end
-
-      def <<(node)
-        if @key
-          @obj[@key] = node
-          @key = nil
-        else
-          @key = node
-        end
-        self
-      end
     end
   end
 end

@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 require "bundler"
-Bundler.require
+Bundler.require(:default, :development)
 
 require File.expand_path("../../lib/github_discover", __FILE__)
 

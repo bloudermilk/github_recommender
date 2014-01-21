@@ -1,27 +1,22 @@
 module GithubDiscover
   class EventMapper
-    attr_reader :event
+    include Celluloid
+    include Celluloid::Logger
 
-    def initialize(event)
-      @event = event
-    end
-
-    def map!
+    def map(event)
       if event["type"] == "WatchEvent"
-        user = User.get_or_create(user_properties)
-        repo = Repo.get_or_create(repo_properties)
+        user = User.get_or_create(user_properties(event))
+        repo = Repo.get_or_create(repo_properties(event))
 
         Neo4j::Transaction.run do
           repo.starred_by << user
         end
-      else
-        false
       end
     end
 
     private
 
-    def repo_properties
+    def repo_properties(event)
       repo = event["repository"]
 
       {
@@ -35,7 +30,7 @@ module GithubDiscover
       }
     end
 
-    def user_properties
+    def user_properties(event)
       user = event["actor_attributes"]
 
       {

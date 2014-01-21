@@ -2,6 +2,8 @@ module GithubDiscover
   class Repo
     include Neo4j::NodeMixin
 
+    rule :all
+
     property :id, type: Fixnum, index: :exact, unique: true
     property :owner, type: String
     property :name, type: String

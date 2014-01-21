@@ -1,4 +1,11 @@
 GIT
+  remote: git://github.com/bloudermilk/json-stream.git
+  revision: 98cd83d208e8cff0e19a93e534f9b1ba814722aa
+  branch: multi-doc
+  specs:
+    json-stream (0.1.3)
+
+GIT
   remote: git://github.com/tarcieri/http.git
   revision: 4bf85ed93f5ee47d2db39f857629b79c5d3efb71
   specs:
@@ -14,11 +21,11 @@ GEM
       celluloid (>= 0.15.0)
       nio4r (>= 0.5.0)
     coderay (1.1.0)
-    ffi (1.9.3)
+    diff-lcs (1.2.5)
     ffi (1.9.3-java)
     http_parser.rb (0.6.0)
     http_parser.rb (0.6.0-java)
-    json-stream (0.1.3)
+    json (1.8.1-java)
     method_source (0.8.2)
     neo4j-community (1.9.5-java)
     neo4j-core (2.3.0-java)
@@ -38,6 +45,14 @@ GEM
       method_source (~> 0.8)
       slop (~> 3.4)
       spoon (~> 0.0)
+    rspec (2.14.1)
+      rspec-core (~> 2.14.0)
+      rspec-expectations (~> 2.14.0)
+      rspec-mocks (~> 2.14.0)
+    rspec-core (2.14.7)
+    rspec-expectations (2.14.4)
+      diff-lcs (>= 1.1.3, < 2.0)
+    rspec-mocks (2.14.4)
     slop (3.4.7)
     spoon (0.0.4)
       ffi
@@ -51,6 +66,8 @@ DEPENDENCIES
   celluloid (~> 0.15.2)
   celluloid-io (~> 0.15.0)
   http!
-  json-stream (~> 0.1.3)
+  json (~> 1.8.1)
+  json-stream (~> 0.1.3)!
   neo4j-wrapper (~> 2.3.0)
   pry (~> 0.9.12.4)
+  rspec (~> 2.14.1)
