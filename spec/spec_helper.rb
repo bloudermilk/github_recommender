@@ -1,5 +1,5 @@
-require "bundler"
-Bundler.require
+require "bundler/setup"
+Bundler.require(:default, :test)
 
 require File.expand_path("../../lib/github_discover", __FILE__)
 

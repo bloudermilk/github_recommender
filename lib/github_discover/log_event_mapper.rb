@@ -8,8 +8,7 @@ module GithubDiscover
     end
 
     def map(event)
-      @log.write(JSON.generate(event) + "\n")
-      @log.flush
+      @log.print(JSON.generate(event) + "\n")
     end
   end
 end

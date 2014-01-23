@@ -4,14 +4,20 @@ module GithubDiscover
     include Celluloid::Logger
 
     def parse(io_in, block)
+      debug "Starting to parse some JSONs"
+
       while chunk = io_in.readline
+        debug "Parsing a chunk of JSON"
+
         begin
           block.call(JSON.parse(chunk))
         rescue JSON::ParserError
-          builder = MultiJsonParser.new(chunk, &block)
+          MultiJsonParser.new(chunk, &block).parse!
         end
       end
-    rescue EOFError; ensure
+    rescue EOFError
+    ensure
+      debug "Finished parsing some JSON"
       io_in.close
     end
   end

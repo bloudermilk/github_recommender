@@ -1,7 +1,7 @@
 # Extremely slow parser for parsing strings that contain multiple sequential
 # JSON objects
 module GithubDiscover
-  class MultiParser
+  class MultiJsonParser
     METHODS = %w[
       start_document end_document start_object end_object start_array end_array
       key value
@@ -9,13 +9,16 @@ module GithubDiscover
 
     def initialize(string, &on_object)
       @parser = JSON::Stream::Parser.new
+      @string = string
       @on_object = on_object
 
       METHODS.each do |name|
         @parser.send(name, &method(name))
       end
+    end
 
-      @parser << string
+    def parse!
+      @parser << @string
     end
 
     def start_document

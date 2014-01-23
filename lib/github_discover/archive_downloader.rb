@@ -1,19 +1,22 @@
 module GithubDiscover
   class ArchiveDownloader
-    include Celluloid#::IO
+    include Celluloid
     include Celluloid::Logger
 
-    URL_FORMAT = "http://data.githubarchive.org/%s.json.gz"
-    TIME_FORMAT = "%Y-%m-%d-%-H"
+    URL_FORMAT = "http://data.githubarchive.org/%Y-%m-%d-%-H.json.gz"
 
     def get(time, io_out)
-      url = URL_FORMAT % time.strftime(TIME_FORMAT)
-      body = HTTP.get(url).body # , socket_class: Celluloid::IO::TCPSocket
+      debug "Starting to fetch #{time}"
 
-      while chunk = body.readpartial
+      url = time.strftime(URL_FORMAT)
+
+      HTTP.get(url).body.each do |chunk|
+        debug "Got chunk of #{time}"
         io_out.print(chunk)
       end
 
+      debug "Finished fetching #{time}"
+    ensure
       io_out.close
     end
   end
