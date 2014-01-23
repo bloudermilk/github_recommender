@@ -1,7 +1,5 @@
 module GithubDiscover
   class Scraper < Celluloid::SupervisionGroup
-    include Celluloid
-
     ONE_HOUR = 60 * 60
 
     supervise ArchiveDownloader, as: :archive_downloader
