@@ -9,6 +9,10 @@ module GithubDiscover
       while chunk = io_in.readline
         debug "Parsing a chunk of JSON"
 
+        # I just met you
+        # And this is crazy
+        # But there's no streaming JSON parser for JRuby
+        # So I used exceptions, baby
         begin
           block.call(JSON.parse(chunk))
         rescue JSON::ParserError

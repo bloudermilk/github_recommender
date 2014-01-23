@@ -7,6 +7,9 @@ module GithubDiscover
     supervise ArchiveDownloader, as: :archive_downloader
     supervise GzipDecompressor, as: :gzip_decompressor
     supervise JsonStreamParser, as: :json_stream_parser
+
+    # This would normally be EventMapper but I've been using LogEventMapper to
+    # help measure performance (thanks `$ pv`)
     pool LogEventMapper, as: :event_mapper, size: 4
 
     def self.scrape!(start_at, end_at)
