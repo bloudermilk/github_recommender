@@ -12,5 +12,6 @@ end
 
 group :test do
   gem "rspec", "~> 2.14.1"
-  gem "webmock", require: "webmock/rspec", github: "bblimke/webmock"
+  gem "webmock", "~> 1.17.1"
+  gem "fakefs", "~> 0.5.0", require: "fakefs/safe"
 end

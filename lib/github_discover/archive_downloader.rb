@@ -1,23 +1,29 @@
+require "open-uri"
+require "fileutils"
+
 module GithubDiscover
   class ArchiveDownloader
     include Celluloid
     include Celluloid::Logger
 
-    URL_FORMAT = "http://data.githubarchive.org/%Y-%m-%d-%-H.json.gz"
+    FILE_FORMAT = "%Y-%m-%d-%-H.json.gz"
+    URL_FORMAT = "http://data.githubarchive.org/#{FILE_FORMAT}"
+    CACHE_DIR = File.expand_path("../../../tmp/githubarchive.org", __FILE__)
+    CACHE_FORMAT = File.join(CACHE_DIR, FILE_FORMAT)
 
-    def get(time, io_out)
-      debug "Starting to fetch #{time}"
+    def get(time, callback)
+      cached = time.strftime(CACHE_FORMAT)
 
-      url = time.strftime(URL_FORMAT)
+      unless File.exists?(cached)
+        url = time.strftime(URL_FORMAT)
 
-      HTTP.get(url).body.each do |chunk|
-        debug "Got chunk of #{time}"
-        io_out.print(chunk)
+        open(url) do |tmp|
+          FileUtils.mkdir_p(CACHE_DIR)
+          File.open(cached, "w") { |f| f.write(tmp.read) }
+        end
       end
 
-      debug "Finished fetching #{time}"
-    ensure
-      io_out.close
+      callback.call(cached)
     end
   end
 end
