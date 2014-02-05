@@ -6,7 +6,6 @@ gem "celluloid", "~> 0.15.2"
 gem "http", github: "tarcieri/http"
 gem "json", "~> 1.8.1"
 gem "json-stream", "~> 0.1.3", branch: "multi-doc", github: "bloudermilk/json-stream"
-gem "neo4j-wrapper", "~> 2.3.0"
 gem "rake", "~> 10.1.1"
 
 group :development do

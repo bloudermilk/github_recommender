@@ -57,13 +57,6 @@ GEM
     method_source (0.8.2)
     minitest (4.7.5)
     multi_json (1.8.4)
-    neo4j-community (1.9.5-java)
-    neo4j-core (2.3.0-java)
-      neo4j-community (>= 1.9.M05, < 2.0)
-      neo4j-cypher (~> 1.0.0)
-    neo4j-cypher (1.0.2)
-    neo4j-wrapper (2.3.0-java)
-      neo4j-core (= 2.3.0)
     pry (0.9.12.4)
       coderay (~> 1.0)
       method_source (~> 0.8)
@@ -108,7 +101,6 @@ DEPENDENCIES
   http!
   json (~> 1.8.1)
   json-stream (~> 0.1.3)!
-  neo4j-wrapper (~> 2.3.0)
   pry (~> 0.9.12.4)
   rake (~> 10.1.1)
   rspec (~> 2.14.1)
