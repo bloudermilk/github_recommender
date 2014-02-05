@@ -12,6 +12,7 @@ module GithubDiscover
     CACHE_FORMAT = File.join(CACHE_DIR, FILE_FORMAT)
 
     def get(time, callback)
+      puts "Start DL #{time}"
       cached = time.strftime(CACHE_FORMAT)
 
       unless File.exists?(cached)
@@ -22,6 +23,7 @@ module GithubDiscover
           File.open(cached, "w") { |f| f.write(tmp.read) }
         end
       end
+      puts "End DL #{time}"
 
       callback.call(cached)
     end

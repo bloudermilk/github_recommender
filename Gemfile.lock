@@ -15,7 +15,31 @@ GIT
 GEM
   remote: https://rubygems.org/
   specs:
+    activemodel (4.0.2)
+      activesupport (= 4.0.2)
+      builder (~> 3.1.0)
+    activerecord (4.0.2)
+      activemodel (= 4.0.2)
+      activerecord-deprecated_finders (~> 1.0.2)
+      activesupport (= 4.0.2)
+      arel (~> 4.0.0)
+    activerecord-deprecated_finders (1.0.3)
+    activerecord-jdbc-adapter (1.3.5)
+      activerecord (>= 2.2)
+    activerecord-jdbcmysql-adapter (1.3.5)
+      activerecord-jdbc-adapter (~> 1.3.5)
+      jdbc-mysql (>= 5.1.22)
+    activesupport (4.0.2)
+      i18n (~> 0.6, >= 0.6.4)
+      minitest (~> 4.2)
+      multi_json (~> 1.3)
+      thread_safe (~> 0.1)
+      tzinfo (~> 0.3.37)
     addressable (2.3.5)
+    arel (4.0.1)
+    atomic (1.1.14)
+    atomic (1.1.14-java)
+    builder (3.1.4)
     celluloid (0.15.2)
       timers (~> 1.1.0)
     coderay (1.1.0)
@@ -26,9 +50,13 @@ GEM
     ffi (1.9.3-java)
     http_parser.rb (0.6.0)
     http_parser.rb (0.6.0-java)
+    i18n (0.6.9)
+    jdbc-mysql (5.1.28)
     json (1.8.1)
     json (1.8.1-java)
     method_source (0.8.2)
+    minitest (4.7.5)
+    multi_json (1.8.4)
     neo4j-community (1.9.5-java)
     neo4j-core (2.3.0-java)
       neo4j-community (>= 1.9.M05, < 2.0)
@@ -45,6 +73,7 @@ GEM
       method_source (~> 0.8)
       slop (~> 3.4)
       spoon (~> 0.0)
+    rake (10.1.1)
     rspec (2.14.1)
       rspec-core (~> 2.14.0)
       rspec-expectations (~> 2.14.0)
@@ -57,7 +86,12 @@ GEM
     slop (3.4.7)
     spoon (0.0.4)
       ffi
+    thread_safe (0.1.3)
+      atomic
+    thread_safe (0.1.3-java)
+      atomic
     timers (1.1.0)
+    tzinfo (0.3.38)
     webmock (1.17.1)
       addressable (>= 2.2.7)
       crack (>= 0.3.2)
@@ -67,6 +101,8 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  activerecord (~> 4.0.2)
+  activerecord-jdbcmysql-adapter (~> 1.3.5)
   celluloid (~> 0.15.2)
   fakefs (~> 0.5.0)
   http!
@@ -74,5 +110,6 @@ DEPENDENCIES
   json-stream (~> 0.1.3)!
   neo4j-wrapper (~> 2.3.0)
   pry (~> 0.9.12.4)
+  rake (~> 10.1.1)
   rspec (~> 2.14.1)
   webmock (~> 1.17.1)

@@ -1,10 +1,13 @@
 source "https://rubygems.org/"
 
+gem "activerecord", "~> 4.0.2"
+gem "activerecord-jdbcmysql-adapter", "~> 1.3.5"
 gem "celluloid", "~> 0.15.2"
 gem "http", github: "tarcieri/http"
 gem "json", "~> 1.8.1"
 gem "json-stream", "~> 0.1.3", branch: "multi-doc", github: "bloudermilk/json-stream"
 gem "neo4j-wrapper", "~> 2.3.0"
+gem "rake", "~> 10.1.1"
 
 group :development do
   gem "pry", "~> 0.9.12.4"

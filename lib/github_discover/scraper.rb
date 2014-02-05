@@ -2,28 +2,30 @@ module GithubDiscover
   class Scraper < Celluloid::SupervisionGroup
     ONE_HOUR = 60 * 60
 
-    supervise ArchiveDownloader, as: :archive_downloader
-    supervise ArchiveProcessor, as: :archive_processor
+    pool ArchiveDownloader, as: :archive_downloader, size: 4
+    pool ArchiveProcessor, as: :archive_processor, size: 6
 
     def self.scrape!(start_at, end_at)
       run!
 
+      futures = []
       cursor = start_at
 
-      condition = Celluloid::Condition.new
-
       until cursor > end_at
-        Celluloid::Actor[:archive_downloader].async.get(cursor, method(:on_download))
+        callback = proc do |path|
+          futures << Celluloid::Actor[:archive_processor].future.process(path)
+        end
+
+        puts "queue #{cursor}"
+
+        Celluloid::Actor[:archive_downloader].async.get(cursor, callback)
 
         cursor += ONE_HOUR
       end
 
-      # TODO: Figure out how to wait for all jobs to be completed before exiting
-      condition.wait
-    end
+      puts "wait"
 
-    def self.on_download(path)
-      Celluloid::Actor[:archive_processor].async.process(path)
+      futures.each(&:value)
     end
   end
 end

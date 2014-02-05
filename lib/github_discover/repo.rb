@@ -1,17 +1,7 @@
 module GithubDiscover
-  class Repo
-    include Neo4j::NodeMixin
-
-    rule :all
-
-    property :id, type: Fixnum, index: :exact, unique: true
-    property :owner, type: String
-    property :name, type: String
-    property :url, type: String
-    property :description, type: String
-    property :homepage, type: String
-    property :language, type: String
-
-    has_n(:starred_by).from(User, :starred)
+  class Repo < ActiveRecord::Base
+    has_and_belongs_to_many :starred_by,
+      class_name: "GithubDiscover::User",
+      join_table: "stars"
   end
 end
