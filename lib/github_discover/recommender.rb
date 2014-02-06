@@ -1,13 +1,11 @@
 module GithubDiscover
   class Recommender
+    include_package "org.apache.mahout.cf.taste.impl.similarity"
+    include_package "org.apache.mahout.cf.taste.impl.neighborhood"
+    include_package "org.apache.mahout.cf.taste.impl.recommender"
+    include_package "org.apache.mahout.cf.taste.impl.model.jdbc"
     include_package "org.apache.commons.pool.impl"
     include_package "org.apache.commons.dbcp"
-
-    MySQLBooleanPrefJDBCDataModel = org.apache.mahout.cf.taste.impl.model.jdbc.MySQLBooleanPrefJDBCDataModel
-    ReloadFromJDBCDataModel = org.apache.mahout.cf.taste.impl.model.jdbc.ReloadFromJDBCDataModel
-    MahoutSimilarity = org.apache.mahout.cf.taste.impl.similarity
-    MahoutNeighborhood = org.apache.mahout.cf.taste.impl.neighborhood
-    MahoutRecommender = org.apache.mahout.cf.taste.impl.recommender
 
     attr_reader :model
 
@@ -18,15 +16,15 @@ module GithubDiscover
     private
 
     def similarity
-      @similarity ||= MahoutSimilarity.TanimotoCoefficientSimilarity.new(model)
+      @similarity ||= TanimotoCoefficientSimilarity.new(model)
     end
 
     def neighborhood
-      @neighborhood ||= MahoutNeighborhood.NearestNUserNeighborhood.new(5, similarity, model)
+      @neighborhood ||= NearestNUserNeighborhood.new(5, similarity, model)
     end
 
     def recommender
-      @recomennder ||= MahoutRecommender.GenericBooleanPrefUserBasedRecommender.new(model, neighborhood, similarity)
+      @recomennder ||= GenericBooleanPrefUserBasedRecommender.new(model, neighborhood, similarity)
     end
 
     def model
