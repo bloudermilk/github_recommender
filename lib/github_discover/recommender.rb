@@ -1,44 +1,25 @@
 module GithubDiscover
   class Recommender
-    include_package "org.apache.mahout.cf.taste.impl.similarity"
-    include_package "org.apache.mahout.cf.taste.impl.neighborhood"
-    include_package "org.apache.mahout.cf.taste.impl.recommender"
-    include_package "org.apache.mahout.cf.taste.impl.model.jdbc"
-    include_package "org.apache.commons.pool.impl"
-    include_package "org.apache.commons.dbcp"
+    Recommendation = Struct.new(:repo, :score)
 
-    attr_reader :model
+    RESULTS_LIMIT = 10
 
-    def recommend(user_id, results_limit)
-      recommender.recommend(user_id, results_limit)
+    autoload :MahoutTanimoto, "lib/github_discover/recommender/mahout_tanimoto"
+
+    attr_reader :backend
+
+    def initialize(backend = nil)
+      @backend = backend || MahoutTanimoto.new
     end
 
-    private
+    def recommend(user)
+      ids_with_scores = backend.recommend(user.id, RESULTS_LIMIT)
+      repos = Repo.find(ids_with_scores.map(&:first))
 
-    def similarity
-      @similarity ||= TanimotoCoefficientSimilarity.new(model)
-    end
+      ids_with_scores.map do |id, score|
+        repo = repos.find { |r| r.id == id }
 
-    def neighborhood
-      @neighborhood ||= NearestNUserNeighborhood.new(5, similarity, model)
-    end
-
-    def recommender
-      @recomennder ||= GenericBooleanPrefUserBasedRecommender.new(model, neighborhood, similarity)
-    end
-
-    def model
-      @model ||= ReloadFromJDBCDataModel.new(
-        MySQLBooleanPrefJDBCDataModel.new(datasource, "stars", "user_id", "repo_id", nil)
-      )
-    end
-
-    def datasource
-      @datasource ||= begin
-        connection_pool = GenericObjectPool.new
-        connection_factory = DriverManagerConnectionFactory.new("jdbc:mysql://localhost/github_discover", "root", "")
-        poolable_connection_factory = PoolableConnectionFactory.new(connection_factory, connection_pool, nil, nil, false, true)
-        PoolingDataSource.new(connection_pool)
+        Recommendation.new(repo, score)
       end
     end
   end

@@ -1,6 +1,7 @@
 $LOAD_PATH.push(File.expand_path("../../lib", __FILE__))
 
 module GithubDiscover
+  autoload :API, "github_discover/api"
   autoload :ArchiveDownloader, "github_discover/archive_downloader"
   autoload :ArchiveProcessor, "github_discover/archive_processor"
   autoload :EventMapper, "github_discover/event_mapper"

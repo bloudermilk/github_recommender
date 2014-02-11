@@ -1,6 +1,9 @@
 require "spec_helper"
+require "fakefs/spec_helpers"
 
 describe GithubDiscover::ArchiveDownloader do
+  include FakeFS::SpecHelpers
+
   describe "#get" do
     let(:time) { Time.new(2013, 1, 16) }
 
