@@ -3,7 +3,7 @@ Bundler.require(:default, :test)
 
 require "webmock/rspec"
 
-require File.expand_path("../../lib/github_discover", __FILE__)
+require File.expand_path("../../lib/github_recommender", __FILE__)
 
 RSpec.configure do |config|
   config.treat_symbols_as_metadata_keys_with_true_values = true

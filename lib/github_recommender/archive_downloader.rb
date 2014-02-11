@@ -1,7 +1,7 @@
 require "open-uri"
 require "fileutils"
 
-module GithubDiscover
+module GithubRecommender
   class ArchiveDownloader
     include Celluloid
     include Celluloid::Logger
@@ -12,7 +12,6 @@ module GithubDiscover
     CACHE_FORMAT = File.join(CACHE_DIR, FILE_FORMAT)
 
     def get(time, callback)
-      puts "Start DL #{time}"
       cached = time.strftime(CACHE_FORMAT)
 
       unless File.exists?(cached)
@@ -23,7 +22,8 @@ module GithubDiscover
           File.open(cached, "w") { |f| f.write(tmp.read) }
         end
       end
-      puts "End DL #{time}"
+
+      debug "Finished downloading #{time}"
 
       callback.call(cached)
     end

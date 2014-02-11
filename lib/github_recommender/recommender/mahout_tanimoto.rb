@@ -1,4 +1,4 @@
-module GithubDiscover
+module GithubRecommender
   class Recommender
     class MahoutTanimoto
       include_package "org.apache.mahout.cf.taste.impl.similarity"
@@ -33,7 +33,7 @@ module GithubDiscover
       def datasource
         @datasource ||= begin
           connection_pool = GenericObjectPool.new
-          connection_factory = DriverManagerConnectionFactory.new("jdbc:mysql://localhost/github_discover", "root", "")
+          connection_factory = DriverManagerConnectionFactory.new("jdbc:mysql://localhost/github_recommender", "root", "")
           poolable_connection_factory = PoolableConnectionFactory.new(connection_factory, connection_pool, nil, nil, false, true)
           PoolingDataSource.new(connection_pool)
         end

@@ -1,12 +1,12 @@
 require "spec_helper"
 
-describe GithubDiscover::Recommender do
+describe GithubRecommender::Recommender do
   subject { described_class.new(stub_backend) }
 
   before { allow(Repo).to receive(:find).with([repo.id]).and_return(repo) }
 
-  let(:user) { double("GithubDiscover::User", id: 1) }
-  let(:repo) { double("GithubDiscover::Repo", id: 2) }
+  let(:user) { double("GithubRecommender::User", id: 1) }
+  let(:repo) { double("GithubRecommender::Repo", id: 2) }
   let(:score) { 0.5 }
 
   let(:stub_backend) do
@@ -16,7 +16,7 @@ describe GithubDiscover::Recommender do
   describe "#recommend" do
     it "returns an array of Recommendations" do
       expect(subject.recommend(user)).to eq([
-        GithubDiscover::Recommender::Recommendation.new(user, score)
+        GithubRecommender::Recommender::Recommendation.new(user, score)
       ])
     end
   end

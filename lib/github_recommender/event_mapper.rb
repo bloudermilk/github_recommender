@@ -1,4 +1,4 @@
-module GithubDiscover
+module GithubRecommender
   class EventMapper
     REPO_PROPERTIES = %W[owner name url description homepage language]
     USER_PROPERTIES = %W[name]
@@ -64,7 +64,7 @@ module GithubDiscover
     end
 
     def event_user
-      event["actor_attributes"]
+      event["actor_attributes"] || { "login" => event["actor"] }
     end
   end
 end

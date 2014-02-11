@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe GithubDiscover::MultiJsonParser do
+describe GithubRecommender::MultiJsonParser do
   describe "#parse!" do
     let(:json_stream) { "{\"foo\":\"bar\"}{\"baz\":\"qux\"}" }
 

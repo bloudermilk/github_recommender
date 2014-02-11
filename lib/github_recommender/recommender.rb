@@ -1,10 +1,10 @@
-module GithubDiscover
+module GithubRecommender
   class Recommender
     Recommendation = Struct.new(:repo, :score)
 
     RESULTS_LIMIT = 10
 
-    autoload :MahoutTanimoto, "lib/github_discover/recommender/mahout_tanimoto"
+    autoload :MahoutTanimoto, "lib/github_recommender/recommender/mahout_tanimoto"
 
     attr_reader :backend
 

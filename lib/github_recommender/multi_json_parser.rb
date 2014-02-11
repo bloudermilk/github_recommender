@@ -1,6 +1,6 @@
 # Extremely slow parser for parsing strings that contain multiple sequential
 # JSON objects
-module GithubDiscover
+module GithubRecommender
   class MultiJsonParser
     METHODS = %w[
       start_document end_document start_object end_object start_array end_array

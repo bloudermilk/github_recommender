@@ -3,11 +3,11 @@
 require "bundler"
 Bundler.require(:default, :development) # TODO: Remove development!!!
 
-require File.expand_path("../../lib/github_discover", __FILE__)
+require File.expand_path("../../lib/github_recommender", __FILE__)
 
 start_at = Time.new(*ARGV[0].split("-"))
 end_at = ARGV[1] ? Time.new(*ARGV[1].split("-")) : start_at
 
-GithubDiscover.connect_db!
+GithubRecommender.boot!
 
-GithubDiscover::Scraper.scrape!(start_at, end_at)
+GithubRecommender::Scraper.scrape!(start_at, end_at)

@@ -1,18 +1,17 @@
 require "sinatra/base"
 require "sinatra/json"
 
-module GithubDiscover
+module GithubRecommender
   class API < Sinatra::Base
     # Easily render JSON
     helpers Sinatra::JSON
 
-    set :show_exceptions, false
-
     # Automatically return connections to the pool
     use ActiveRecord::ConnectionAdapters::ConnectionManagement
 
+    # Don't blow up when we can't find something
     error ActiveRecord::RecordNotFound do
-      404
+      halt(404, message: "Page not found")
     end
 
     # Get Recommendations for the given User

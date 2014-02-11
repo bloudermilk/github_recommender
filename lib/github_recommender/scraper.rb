@@ -1,4 +1,4 @@
-module GithubDiscover
+module GithubRecommender
   class Scraper < Celluloid::SupervisionGroup
     ONE_HOUR = 60 * 60
 
@@ -16,14 +16,10 @@ module GithubDiscover
           futures << Celluloid::Actor[:archive_processor].future.process(path)
         end
 
-        puts "queue #{cursor}"
-
         Celluloid::Actor[:archive_downloader].async.get(cursor, callback)
 
         cursor += ONE_HOUR
       end
-
-      puts "wait"
 
       futures.each(&:value)
     end

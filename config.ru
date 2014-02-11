@@ -1,10 +1,10 @@
 require "bundler"
 Bundler.require(:default)
 
-require File.expand_path("../lib/github_discover", __FILE__)
+require File.expand_path("../lib/github_recommender", __FILE__)
 
-GithubDiscover.connect_db!
+GithubRecommender.boot!
 
-GithubDiscover::API.set(:recommender, GithubDiscover::Recommender.new)
+GithubRecommender::API.set(:recommender, GithubRecommender::Recommender.new)
 
-run GithubDiscover::API
+run GithubRecommender::API
