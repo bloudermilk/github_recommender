@@ -2,7 +2,7 @@ module GithubRecommender
   class Recommender
     Recommendation = Struct.new(:repo, :score)
 
-    RESULTS_LIMIT = 10
+    RESULTS_LIMIT = 25
 
     autoload :MahoutTanimoto, "lib/github_recommender/recommender/mahout_tanimoto"
 
