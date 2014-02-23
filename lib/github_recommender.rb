@@ -19,4 +19,8 @@ module GithubRecommender
   def self.recommender
     @recommender ||= Recommender.new
   end
+
+  def self.db_config
+    @db_config ||= ActiveRecord::ConnectionAdapters::ConnectionSpecification::Resolver.new(ENV["DATABASE_URL"], {}).spec.config
+  end
 end

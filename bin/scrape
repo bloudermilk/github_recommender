@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 require "bundler"
-Bundler.require(:default, :development) # TODO: Remove development!!!
+Bundler.require(:default)
 
 require File.expand_path("../../lib/github_recommender", __FILE__)
 

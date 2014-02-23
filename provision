@@ -4,7 +4,7 @@
 # This script will only work the first time it is run on a given server.
 
 RUBY_INSTALL_VERSION=0.4.0
-RUBY_VERSION=jruby-1.7.10
+JRUBY_VERSION=1.7.10
 
 if [ -f "/opt/provisioned-at" ]; then
   echo "Already provisioned. Start from scratch if you need to provision again"
@@ -27,7 +27,7 @@ date > /opt/provisioned-at
 apt-get update
 
 # Upgrade all system packages
-apt-get -y upgrade
+apt-get -y dist-upgrade
 
 # Basic necessities
 apt-get -y install build-essential python-software-properties git-core curl
@@ -43,10 +43,9 @@ cd ruby-install-$RUBY_INSTALL_VERSION/
 make install
 
 # Install ruby
-apt-get -y install libxml2-dev libxslt-dev
-ruby-install ruby $RUBY_VERSION
-sed -i -e "s/^PATH=\"/PATH=\"\/opt\/rubies\/ruby-$RUBY_VERSION\/bin:/g" /etc/environment
-export PATH=/opt/rubies/ruby-$RUBY_VERSION/bin:$PATH
+ruby-install jruby $JRUBY_VERSION
+sed -i -e "s/^PATH=\"/PATH=\"\/opt\/rubies\/jruby-$JRUBY_VERSION\/bin:/g" /etc/environment
+source /etc/environment
 gem update --system
 
 # Install Bundler (for Capistrano later)
@@ -102,5 +101,12 @@ SCRIPT
 chmod +x /etc/network/if-pre-up.d/iptables
 /etc/network/if-pre-up.d/iptables
 
+# Set up app config
+echo "DATABASE_URL=mysql://root@localhost/github_recommender?pool=25" >> /etc/environment
+source /etc/environment
+
 # Finally, get our app
 git clone https://github.com/bloudermilk/github_recommender.git /opt/app
+cd /opt/app
+bundle
+bundle exec rake db:create db:migrate
