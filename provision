@@ -101,3 +101,6 @@ SCRIPT
 # Ensure the starup script is executable then run it immediately
 chmod +x /etc/network/if-pre-up.d/iptables
 /etc/network/if-pre-up.d/iptables
+
+# Finally, get our app
+git clone https://github.com/bloudermilk/github_recommender.git /opt/app

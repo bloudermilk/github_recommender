@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# DESCRIPTION: Bootstraps a new host machine
+
+if [ $# -ne 1 ]
+then
+  echo "Usage: `basename $0` {host}"
+  echo "Example: `basename $0` 1.2.3.4"
+  exit 65
+fi
+
+HOST=$1
+
+# Fail if any of the commands below return a non-0 exit code
+set -e
+
+PROVISION_DIR="$( cd "$( dirname "$0" )" && pwd )"
+
+ssh root@$HOST 'bash -s' < $PROVISION_DIR/provision
+
+echo Successfully bootstrapped the server. SSH in and modify the app configs in /home/deployer/apps/lafitness/shared
