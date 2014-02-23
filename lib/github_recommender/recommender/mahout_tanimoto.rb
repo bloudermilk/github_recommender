@@ -36,7 +36,7 @@ module GithubRecommender
         @datasource ||= begin
           connection_pool = GenericObjectPool.new
           user, pass = GithubRecommender.db_config.values_at(:username, :password)
-          connection_factory = DriverManagerConnectionFactory.new(jdbc_uri, username, password)
+          connection_factory = DriverManagerConnectionFactory.new(jdbc_uri, user, pass)
           poolable_connection_factory = PoolableConnectionFactory.new(connection_factory, connection_pool, nil, nil, false, true)
           PoolingDataSource.new(connection_pool)
         end
