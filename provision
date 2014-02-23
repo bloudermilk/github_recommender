@@ -1,0 +1,103 @@
+#!/bin/bash
+
+# Installs all necessary software to run GitHub Recommender on an Ubuntu server.
+# This script will only work the first time it is run on a given server.
+
+RUBY_INSTALL_VERSION=0.4.0
+RUBY_VERSION=jruby-1.7.10
+
+if [ -f "/opt/provisioned-at" ]; then
+  echo "Already provisioned. Start from scratch if you need to provision again"
+  exit 0
+fi
+
+# Fail if any of the commands below return a non-0 exit code
+set -e
+
+# Print commands as they are executed
+set -x
+
+# Never ask for user input
+export DEBIAN_FRONTEND=noninteractive
+
+# Record that we've provisioned this server
+date > /opt/provisioned-at
+
+# Make sure repositories are up-to-date
+apt-get update
+
+# Upgrade all system packages
+apt-get -y upgrade
+
+# Basic necessities
+apt-get -y install build-essential python-software-properties git-core curl
+
+# Nice-to-haves
+apt-get -y install tmux vim pv
+
+# Install ruby-install
+cd /opt
+wget -O ruby-install-$RUBY_INSTALL_VERSION.tar.gz https://github.com/postmodern/ruby-install/archive/v$RUBY_INSTALL_VERSION.tar.gz
+tar -xzvf ruby-install-$RUBY_INSTALL_VERSION.tar.gz
+cd ruby-install-$RUBY_INSTALL_VERSION/
+make install
+
+# Install ruby
+apt-get -y install libxml2-dev libxslt-dev
+ruby-install ruby $RUBY_VERSION
+sed -i -e "s/^PATH=\"/PATH=\"\/opt\/rubies\/ruby-$RUBY_VERSION\/bin:/g" /etc/environment
+export PATH=/opt/rubies/ruby-$RUBY_VERSION/bin:$PATH
+gem update --system
+
+# Install Bundler (for Capistrano later)
+gem install bundler --no-document
+
+# Install mysql
+apt-get -y install mysql-server
+
+# Save iptables rules to a file
+cat << 'IPTABLES' > /etc/iptables.rules
+*filter
+
+# Allow DHCP traffix
+-A INPUT -i eth0 -p udp --dport 67:68 --sport 67:68 -j ACCEPT
+
+#  Allows all loopback (lo0) traffic and drop all traffic to 127/8 that doesn't use lo0
+-A INPUT -i lo -j ACCEPT
+-A INPUT ! -i lo -d 127.0.0.0/8 -j REJECT
+
+#  Accepts all established inbound connections
+-A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+
+#  Allows all outbound traffic
+#  You can modify this to only allow certain traffic
+-A OUTPUT -j ACCEPT
+
+# Allows HTTP connections from anywhere
+-A INPUT -p tcp --dport 80 -j ACCEPT
+
+#  Allows SSH connections
+-A INPUT -p tcp -m state --state NEW --dport 22 -j ACCEPT
+
+# Allow ping
+-A INPUT -p icmp -m icmp --icmp-type 8 -j ACCEPT
+
+# log iptables denied calls
+-A INPUT -m limit --limit 5/min -j LOG --log-prefix "iptables denied: " --log-level 7
+
+# Reject all other inbound - default deny unless explicitly allowed policy
+-A INPUT -j REJECT
+-A FORWARD -j REJECT
+
+COMMIT
+IPTABLES
+
+# Create a startup script to load our iptables file (above)
+cat << 'SCRIPT' > /etc/network/if-pre-up.d/iptables
+#!/bin/sh
+iptables-restore < /etc/iptables.rules
+SCRIPT
+
+# Ensure the starup script is executable then run it immediately
+chmod +x /etc/network/if-pre-up.d/iptables
+/etc/network/if-pre-up.d/iptables
