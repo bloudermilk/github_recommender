@@ -46,9 +46,9 @@ make install
 ruby-install jruby $JRUBY_VERSION
 sed -i -e "s/^PATH=\"/PATH=\"\/opt\/rubies\/jruby-$JRUBY_VERSION\/bin:/g" /etc/environment
 source /etc/environment
-gem update --system
+gem update --system --quiet --no-document
 
-# Install Bundler (for Capistrano later)
+# Install Bundler
 gem install bundler --no-document
 
 # Install mysql
@@ -109,4 +109,7 @@ source /etc/environment
 git clone https://github.com/bloudermilk/github_recommender.git /opt/app
 cd /opt/app
 bundle
+jbundle
 bundle exec rake db:create db:migrate
+
+reboot

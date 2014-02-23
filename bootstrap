@@ -18,4 +18,4 @@ PROVISION_DIR="$( cd "$( dirname "$0" )" && pwd )"
 
 ssh root@$HOST 'bash -s' < $PROVISION_DIR/provision
 
-echo Successfully bootstrapped the server. SSH in and modify the app configs in /home/deployer/apps/lafitness/shared
+echo Successfully bootstrapped the server
