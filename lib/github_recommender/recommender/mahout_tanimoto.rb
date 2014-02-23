@@ -21,7 +21,7 @@ module GithubRecommender
       end
 
       def recommender
-        @recomennder ||= GenericBooleanPrefUserBasedRecommender.new(model, neighborhood, similarity)
+        @recommender ||= GenericBooleanPrefUserBasedRecommender.new(model, neighborhood, similarity)
       end
 
       def model
