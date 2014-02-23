@@ -2,8 +2,8 @@ module GithubRecommender
   class Scraper < Celluloid::SupervisionGroup
     ONE_HOUR = 60 * 60
 
-    pool ArchiveDownloader, as: :archive_downloader, size: 4
-    pool ArchiveProcessor, as: :archive_processor, size: 6
+    supervise ArchiveDownloader, as: :archive_downloader
+    supervise ArchiveProcessor, as: :archive_processor
 
     def self.scrape!(start_at, end_at)
       run!
