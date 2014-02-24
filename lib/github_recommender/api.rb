@@ -1,10 +1,13 @@
 require "sinatra/base"
 require "sinatra/json"
+require "sinatra/respond_with"
 
 module GithubRecommender
   class API < Sinatra::Base
-    # Easily render JSON
     helpers Sinatra::JSON
+    register Sinatra::RespondWith
+
+    enable :inline_templates
 
     # Automatically return connections to the pool
     use ActiveRecord::ConnectionAdapters::ConnectionManagement
@@ -16,9 +19,34 @@ module GithubRecommender
 
     # Get Recommendations for the given User
     get "/users/:login/recommendations" do |login|
-      json settings.recommender.recommend(
-        User.find_by!(login: login)
-      )
+      respond_with :index do |format|
+        format.html { erb :index }
+
+        format.json do
+          json settings.recommender.recommend(User.find_by!(login: login))
+        end
+      end
     end
   end
 end
+
+__END__
+
+@@ index
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>GitHub Recommender</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+    <script>
+      $(function () {
+        $.getJSON(document.URL, function (data) {
+          $("body").html("<pre>" + JSON.stringify(data, null, 2) + "</pre>");
+        });
+      });
+    </script>
+  </head>
+  <body>
+    Loading...
+  </body>
+</html>
