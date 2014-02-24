@@ -4,7 +4,7 @@ module GithubRecommender
 
     def self.pool_env(actor, options = {})
       env = ENV["#{actor.name.underscore.upcase}_POOL"]
-      size = env ? env.to_i : 1
+      size = env ? env.to_i : 2
 
       pool(actor, options.merge(size: size))
     end
