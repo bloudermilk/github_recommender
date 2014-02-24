@@ -37,6 +37,9 @@ __END__
 <html>
   <head>
     <title>GitHub Recommender</title>
+  </head>
+  <body>
+    Loading...
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
     <script>
       $(function () {
@@ -45,8 +48,5 @@ __END__
         });
       });
     </script>
-  </head>
-  <body>
-    Loading...
   </body>
 </html>
