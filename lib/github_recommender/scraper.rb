@@ -2,6 +2,13 @@ module GithubRecommender
   class Scraper < Celluloid::SupervisionGroup
     ONE_HOUR = 60 * 60
 
+    def self.pool_env(actor, options = {})
+      env = ENV["#{actor.name.underscore.upcase}_POOL"]
+      size = env ? env.to_i : 1
+
+      pool(actor, options.merge(size: size))
+    end
+
     pool_env ArchiveDownloader, as: :archive_downloader
     pool_env ArchiveProcessor, as: :archive_processor
 
@@ -23,12 +30,5 @@ module GithubRecommender
 
       futures.each(&:value)
     end
-  end
-
-  def self.pool_env(actor, options = {})
-    env = ENV["#{actor.name.underscore.upcase}_POOL"]
-    size = env ? env.to_i : 1
-
-    pool(actor, options.merge(size: size))
   end
 end
