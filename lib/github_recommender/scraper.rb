@@ -2,8 +2,8 @@ module GithubRecommender
   class Scraper < Celluloid::SupervisionGroup
     ONE_HOUR = 60 * 60
 
-    pool ArchiveDownloader, as: :archive_downloader, size: pool_env("DL")
-    pool ArchiveProcessor, as: :archive_processor, size: pool_env("PROC")
+    pool_env ArchiveDownloader, as: :archive_downloader
+    pool_env ArchiveProcessor, as: :archive_processor
 
     def self.scrape!(start_at, end_at)
       run!
@@ -25,9 +25,10 @@ module GithubRecommender
     end
   end
 
-  def self.pool_env(name)
-    name = "#{name}_POOL"
+  def self.pool_env(actor, options = {})
+    env = ENV["#{actor.name.underscore.upcase}_POOL"]
+    size = env ? env.to_i : 1
 
-    ENV[name] ? ENV[name].to_i : 1
+    pool(actor, options.merge(size: size))
   end
 end

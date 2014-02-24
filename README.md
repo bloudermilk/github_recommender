@@ -10,10 +10,10 @@ This app depends on JRuby and MySQL being installed on the host.
 The following environment variables are used for configuration:
 
 * `DATABASE_URL` (required): The URL of the database to connect to
-* `DL_POOL` (optional): The number of concurrent downloaders to run when
-  scraping.
-* `PROC_POOL` (optional): The number of concurrent processors to run when
-  scraping.
+* `ARCHIVE_DOWNLOADER_POOL` (optional): The number of concurrent downloaders to
+  run when scraping.
+* `ARCHIVE_PROCESSOR_POOL` (optional): The number of concurrent processors to
+  run when scraping.
 
 ```bash
 $ bundle
